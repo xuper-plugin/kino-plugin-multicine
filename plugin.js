@@ -623,7 +623,7 @@ function markShort(id) {
 
 const HEALTH_KEY = "health1";
 const TTL_HEALTH = 6 * 60 * 60 * 1000;
-const MAX_WAVES = 2; // waves of scrapers asked for one title: the repository has many that no longer work
+const MAX_WAVES = 4; // waves of scrapers asked for one title: the repository has many that no longer work (an anime title found none in the first two)
 const RESOLVE_BUDGET_MS = 40000; // no new wave starts after this: the call has 75 s and the installs of a wave take their time
 const SCRAPER_TIMEOUT_MS = 15000; // a scraper that hangs is cut here so it hides nothing
 
@@ -690,6 +690,18 @@ function failureMessage(items) {
     list = next;
   }
   return t("noSourcesWhy", { n: items.length, list }).slice(0, 160);
+}
+
+/**
+ * The next scrapers to ask. For an animation title, mostly the anime scrapers but never only them: when the anime sites are down or
+ * do not have a classic (Dragon Ball Z found nothing in twelve of them), the general scrapers often do.
+ */
+function nextWave(order, tried, anime, size) {
+  const left = order.filter((o) => !tried.has(o.id));
+  if (!anime) return left.slice(0, size);
+  const mine = left.filter((o) => animeOnly(o)).slice(0, Math.max(1, size - 2));
+  const rest = left.filter((o) => !animeOnly(o)).slice(0, size - mine.length);
+  return mine.concat(rest);
 }
 
 // Scrapers made for anime: a title that is not animation is not worth their time, an animation title asks them first.
@@ -843,15 +855,17 @@ export async function resolve(ref) {
   const tried = new Set();
   const failures = [];
   let order;
+  let anime = false;
   try {
-    order = ranked(await offeredNow(), health, await isAnimation(r));
+    anime = await isAnimation(r);
+    order = ranked(await offeredNow(), health, anime);
   } catch (e) {
     kino.log("kino.nuvio.available failed: " + (e && e.code));
     throw kino.error("unavailable", "nuvio " + (e && e.code), { userMessage: (e && e.userMessage) || t("noScrapers") });
   }
   const installed = new Set(order.filter((o) => o.installed).map((o) => o.id));
   for (let wave = 0; wave < MAX_WAVES && Date.now() - started < RESOLVE_BUDGET_MS; wave++) {
-    const pick = order.filter((o) => !tried.has(o.id)).slice(0, wanted()).map((o) => o.id);
+    const pick = nextWave(order, tried, anime, wanted()).map((o) => o.id);
     if (!pick.length) break;
     pick.forEach((id) => tried.add(id));
     const missing = pick.filter((id) => !installed.has(id));

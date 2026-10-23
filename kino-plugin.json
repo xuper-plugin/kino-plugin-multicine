@@ -1,7 +1,7 @@
 {
   "id": "multicine",
   "name": "MultiCine",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "apiVersion": 11,
   "entry": "plugin.js",
   "description": "Películas y series con enlaces de muchas fuentes a la vez: el catálogo viene de TMDB y los enlaces los buscan, en paralelo, los scrapers de un repositorio de Nuvio. Experimento.",
