@@ -1,0 +1,158 @@
+{
+  "id": "multicine",
+  "name": "MultiCine",
+  "version": "0.8.1",
+  "apiVersion": 11,
+  "entry": "plugin.js",
+  "description": "Películas y series con enlaces de muchas fuentes a la vez: el catálogo viene de TMDB y los enlaces los buscan, en paralelo, los scrapers de un repositorio de Nuvio. Experimento.",
+  "author": "xuper-plugin",
+  "hosts": [
+    "image.tmdb.org"
+  ],
+  "capabilities": [
+    "search",
+    "home",
+    "browse",
+    "episodes",
+    "resolve",
+    "nuvio"
+  ],
+  "streamHosts": "any",
+  "categories": [
+    "movies",
+    "series"
+  ],
+  "color": "#7B61FF",
+  "section": {
+    "label": "MultiCine",
+    "labelEn": "MultiCine"
+  },
+  "settings": [
+    {
+      "key": "homeRows",
+      "type": "select",
+      "label": "Filas en Inicio",
+      "labelEn": "Rows on Home",
+      "default": "4",
+      "options": [
+        {
+          "value": "2",
+          "label": "2",
+          "labelEn": "2"
+        },
+        {
+          "value": "4",
+          "label": "4",
+          "labelEn": "4"
+        },
+        {
+          "value": "8",
+          "label": "8",
+          "labelEn": "8"
+        }
+      ],
+      "hint": "Cine y series se alternan.",
+      "hintEn": "Movies and series alternate."
+    },
+    {
+      "key": "scrapers",
+      "type": "select",
+      "label": "Scrapers a usar",
+      "labelEn": "Scrapers to use",
+      "default": "6",
+      "options": [
+        {
+          "value": "3",
+          "label": "3",
+          "labelEn": "3"
+        },
+        {
+          "value": "6",
+          "label": "6",
+          "labelEn": "6"
+        },
+        {
+          "value": "9",
+          "label": "9",
+          "labelEn": "9"
+        },
+        {
+          "value": "12",
+          "label": "12",
+          "labelEn": "12"
+        }
+      ],
+      "hint": "Más scrapers dan más copias, pero tardan más.",
+      "hintEn": "More scrapers give more copies but take longer."
+    },
+    {
+      "key": "quality",
+      "type": "select",
+      "label": "Calidad preferida",
+      "labelEn": "Preferred quality",
+      "default": "auto",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Automática (1080p)",
+          "labelEn": "Automatic (1080p)"
+        },
+        {
+          "value": "2160p",
+          "label": "2160p (4K)",
+          "labelEn": "2160p (4K)"
+        },
+        {
+          "value": "1080p",
+          "label": "1080p",
+          "labelEn": "1080p"
+        },
+        {
+          "value": "720p",
+          "label": "720p",
+          "labelEn": "720p"
+        },
+        {
+          "value": "480p",
+          "label": "480p",
+          "labelEn": "480p"
+        }
+      ],
+      "hint": "La copia más cercana va primera.",
+      "hintEn": "The closest copy plays first."
+    },
+    {
+      "key": "probe",
+      "type": "toggle",
+      "default": true,
+      "label": "Descartar clips antes de reproducir",
+      "labelEn": "Drop clips before playing",
+      "hint": "Pide el tamaño de cada copia para no abrir tráileres ni anuncios.",
+      "hintEn": "Asks each copy's size so trailers and ads never open."
+    },
+    {
+      "key": "statusSection",
+      "type": "section",
+      "label": "Estado",
+      "labelEn": "Status"
+    },
+    {
+      "key": "scraperStatus",
+      "type": "status",
+      "label": "Scrapers",
+      "labelEn": "Scrapers"
+    },
+    {
+      "key": "check",
+      "type": "action",
+      "label": "Comprobar scrapers",
+      "labelEn": "Check scrapers"
+    }
+  ],
+  "fetchHosts": "any",
+  "nuvioRepos": [
+    "D3adlyRocket/All-in-One-Nuvio"
+  ],
+  "icon": "icon.png",
+  "homepage": "https://github.com/xuper-plugin/kino-plugin-multicine"
+}
