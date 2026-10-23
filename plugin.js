@@ -462,11 +462,14 @@ export async function search(query) {
   if (q.length < 2) return [];
   const data = await tmdb("/search/multi", { query: q, include_adult: false, page: 1 });
   const items = [];
+  const seen = { movie: 0, tv: 0, other: 0, dropped: 0 };
   for (const r of data.results || []) {
-    if (r.media_type !== "movie" && r.media_type !== "tv") continue;
+    if (r.media_type !== "movie" && r.media_type !== "tv") { seen.other++; continue; }
+    seen[r.media_type]++;
     const item = titleItem(r, r.media_type === "movie" ? "movie" : "series", names);
-    if (item) items.push(item);
+    if (item) items.push(item); else seen.dropped++;
   }
+  kino.log(`search "${q.slice(0, 40)}" type=${query.type}: tmdb gave ${(data.results || []).length} (movie ${seen.movie}, tv ${seen.tv}, other ${seen.other}), kept ${items.length}, dropped ${seen.dropped}; first: ${(data.results || []).slice(0, 3).map((r) => r.media_type + ":" + (r.title || r.name)).join(" | ")}`);
   // The type Kino leans towards goes first; the order inside each group is TMDB's.
   if (wanted) items.sort((a, b) => (a.kind === (wanted === "tv" ? "series" : "movie") ? 0 : 1) - (b.kind === (wanted === "tv" ? "series" : "movie") ? 0 : 1));
   return items.slice(0, 40);
